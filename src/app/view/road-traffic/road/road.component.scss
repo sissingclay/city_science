@@ -1,0 +1,29 @@
+.road {
+    position: fixed;
+    border-left: 2px solid #a7a7a7;
+    width: 350px;
+    height: 100%;
+    top: 6rem;
+    right: 0;
+    transition: transform 250ms ease-in-out;
+    transform: translate(370px, 0);
+    background-color: #f7f7f7;
+    box-shadow: -5px 0px 14px -6px rgba(0, 0, 0, 0.75);
+
+    &.-show {
+        transform: translate(0, 0);
+    }
+
+    &__content {
+        overflow-y: scroll;
+        height: calc(100% - 10rem);
+    }
+}
+
+.pull-up {
+    margin-top: -2.5rem;
+}
+
+.grey-scale {
+    background-color: #f7f7f7;
+}

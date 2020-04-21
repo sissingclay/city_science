@@ -1,0 +1,214 @@
+<section class="p-4" *ngIf="road">
+    <a class="mb-0" [routerLink]="['']">Back to roads</a>
+    <h2 class="mb-0">Road: {{ pageData.road_name }}</h2>
+    <p>
+        Category: {{ pageData.road_category }} | Type: {{ pageData.road_type }}
+        <ng-container *ngIf="pageData.direction_of_travel"
+            >| Direction of travel:
+            {{ pageData.direction_of_travel }}</ng-container
+        >
+    </p>
+
+    <section class="row no-gutters mb-2">
+        <div class="col-12 col-md-6">
+            <select
+                [ngModel]="select"
+                (ngModelChange)="roadChanged($event)"
+                class="form-control"
+                data-role="select-dropdown"
+            >
+                <option [value]="''"
+                    >All data for {{ pageData.road_name }}</option
+                >
+                <option [value]="i" *ngFor="let point of points; let i = index"
+                    >{{ point.road_name }} | {{ point.direction_of_travel }} |
+                    {{ point.start_junction_road_name }} -
+                    {{ point.end_junction_road_name }}</option
+                >
+            </select>
+        </div>
+        <div class="col-12 col-md-6">
+            <button
+                class="btn btn-outline-primary ml-3"
+                (click)="showSideBar = !showSideBar"
+            >
+                Toggle data
+            </button>
+        </div>
+    </section>
+
+    <section class="row">
+        <div class="col-12 col-md-8">
+            <google-map
+                height="300px"
+                width="100%"
+                [center]="center"
+                [zoom]="zoom"
+            >
+                <map-marker
+                    #marker
+                    *ngFor="
+                        let markerPosition of markerPositions;
+                        let i = index
+                    "
+                    [position]="markerPosition"
+                    [options]="markerOptions[i]"
+                    (mapClick)="openInfoWindow(i)"
+                ></map-marker>
+            </google-map>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <plotly-plot
+                [data]="bar.data"
+                [layout]="bar.layout"
+                [style]="{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden'
+                }"
+            ></plotly-plot>
+            <div class="row">
+                <div class="col-6 pull-up">
+                    <select
+                        class="form-control"
+                        data-role="select-dropdown"
+                        [(ngModel)]="barLeft"
+                        (ngModelChange)="barChanged()"
+                    >
+                        <option [value]="'pedal_cycles'">pedal_cycles</option>
+                        <option [value]="'two_wheeled_motor_vehicles'"
+                            >two_wheeled_motor_vehicles</option
+                        >
+                        <option [value]="'cars_and_taxis'"
+                            >cars_and_taxis</option
+                        >
+                        <option [value]="'buses_and_coaches'"
+                            >buses_and_coaches</option
+                        >
+                        <option [value]="'lgvs'">lgvs</option>
+                        <option [value]="'hgvs_2_rigid_axle'"
+                            >hgvs_2_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_3_rigid_axle'"
+                            >hgvs_3_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_4_or_more_rigid_axle'"
+                            >hgvs_4_or_more_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_3_or_4_articulated_axle'"
+                            >hgvs_3_or_4_articulated_axle</option
+                        >
+                        <option [value]="'hgvs_5_articulated_axle'"
+                            >hgvs_5_articulated_axle</option
+                        >
+                        <option [value]="'hgvs_6_articulated_axle'"
+                            >hgvs_6_articulated_axle</option
+                        >
+                    </select>
+                </div>
+                <div class="col-6 pull-up">
+                    <select
+                        class="form-control"
+                        data-role="select-dropdown"
+                        [(ngModel)]="barRight"
+                        (ngModelChange)="barChanged()"
+                    >
+                        <option [value]="'pedal_cycles'">pedal_cycles</option>
+                        <option [value]="'two_wheeled_motor_vehicles'"
+                            >two_wheeled_motor_vehicles</option
+                        >
+                        <option [value]="'cars_and_taxis'"
+                            >cars_and_taxis</option
+                        >
+                        <option [value]="'buses_and_coaches'"
+                            >buses_and_coaches</option
+                        >
+                        <option [value]="'lgvs'">lgvs</option>
+                        <option [value]="'hgvs_2_rigid_axle'"
+                            >hgvs_2_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_3_rigid_axle'"
+                            >hgvs_3_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_4_or_more_rigid_axle'"
+                            >hgvs_4_or_more_rigid_axle</option
+                        >
+                        <option [value]="'hgvs_3_or_4_articulated_axle'"
+                            >hgvs_3_or_4_articulated_axle</option
+                        >
+                        <option [value]="'hgvs_5_articulated_axle'"
+                            >hgvs_5_articulated_axle</option
+                        >
+                        <option [value]="'hgvs_6_articulated_axle'"
+                            >hgvs_6_articulated_axle</option
+                        >
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="row" style="height: 340px;">
+    <div class="col-12 col-md-4 grey-scale text-center py-4">
+        <h3>Basic Horizontal Bar Chart</h3>
+        <p>The distances of each section</p>
+    </div>
+
+    <div class="col-12 col-md-8">
+        <plotly-plot
+            [data]="scatter.data"
+            [layout]="scatter.layout"
+            [style]="{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden'
+            }"
+        ></plotly-plot>
+    </div>
+</section>
+
+<section class="row" style="height: 340px;">
+    <div class="col-12 col-md-8">
+        <plotly-plot
+            [data]="graph.data"
+            [layout]="graph.layout"
+            [config]="{ showLink: false }"
+            [style]="{
+                position: 'relative',
+                width: '95%',
+                height: '100%'
+            }"
+        ></plotly-plot>
+    </div>
+    <div class="col-12 col-md-4 grey-scale text-center py-4">
+        <h3>Scatter Chart</h3>
+        <p>Amount of traffic vs Distances</p>
+    </div>
+</section>
+
+<aside class="road" [class.-show]="showSideBar">
+    <div>
+        <a
+            class="btn btn-lg btn-bd-primary mb-3"
+            (click)="showSideBar = !showSideBar"
+        >
+            Close X
+        </a>
+    </div>
+
+    <div class="road__content p-3">
+        <ng-container *ngIf="select">
+            <p *ngFor="let data of objectKeys(road)" class="mb-1">
+                {{ data }}: <b>{{ road[data] }}</b>
+            </p>
+        </ng-container>
+
+        <ng-container *ngIf="!select">
+            <p>Please select a road! For more specific data.</p>
+        </ng-container>
+    </div>
+</aside>

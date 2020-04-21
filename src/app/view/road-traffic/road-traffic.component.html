@@ -1,0 +1,17 @@
+<section
+    class="nav-scroller bg-white shadow-sm mb-4 w-100 position-fixed fix-zindex"
+>
+    <nav class="nav nav-underline">
+        <a class="nav-link">Road Traffic</a>
+        <a class="nav-link active" href="" [routerLink]="['']">
+            Roads
+            <span class="badge badge-pill bg-light align-text-bottom">{{
+                roadTrafficService.amountOfRoads$ | async
+            }}</span>
+        </a>
+    </nav>
+</section>
+
+<section class="-spacing">
+    <router-outlet></router-outlet>
+</section>

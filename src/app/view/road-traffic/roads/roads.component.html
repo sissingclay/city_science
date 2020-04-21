@@ -1,0 +1,21 @@
+<p class="p-3 pb-0">
+    I would add filters options here. This would allow the user to filter roads
+    by category, direction of travel and type. Instead of using the default
+    marker, I would highlight part of the road that data is supplied for. Each
+    category of road would be a different colour of that section.
+</p>
+<google-map height="400px" width="100%" [center]="center" [zoom]="zoom">
+    <map-marker
+        #marker
+        *ngFor="let markerPosition of markerPositions; let i = index"
+        [position]="markerPosition"
+        [options]="markerOptions[i]"
+        (mapClick)="openInfoWindow(marker, i)"
+    ></map-marker>
+    <map-info-window>
+        <h5>Road: {{ road }}</h5>
+        <a (click)="goTo(road); $event.preventDefault()" href=""
+            >View more about {{ road }}</a
+        >
+    </map-info-window>
+</google-map>
